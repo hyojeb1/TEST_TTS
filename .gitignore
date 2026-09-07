@@ -361,3 +361,20 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+
+# Piper 테스트: voice 모델 (60MB, download_voices 로 재취득 가능)
+PiperTest/voices/*.onnx
+
+# Piper 테스트: 합성 산출물
+PiperTest/output/*.wav

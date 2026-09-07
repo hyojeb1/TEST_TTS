@@ -1,0 +1,68 @@
+[
+  {
+    "tag": "e01",
+    "text": "ㅋㅋㅋ",
+    "audio_s": 0.372,
+    "phonemes": "khkhkh"
+  },
+  {
+    "tag": "e02",
+    "text": "ㅋㅋㅋㅋㅋㅋㅋㅋ",
+    "audio_s": 0.987,
+    "phonemes": "khkhkhkhkhkhkhkh"
+  },
+  {
+    "tag": "e03",
+    "text": "ㅎㅎ ㅠㅠ ㅗㅜㅑ",
+    "audio_s": 1.498,
+    "phonemes": "hh jˈuju ˈoujˌɐ"
+  },
+  {
+    "tag": "e04",
+    "text": "5000원 도네이션 감사합니다!",
+    "audio_s": 2.159,
+    "phonemes": "ˈo tʃhˈʌn wˈʌn dˈoneˌisjʌn ɡˈɐmsɐhˌɐpnidˌɐ!"
+  },
+  {
+    "tag": "e05",
+    "text": "HP 30% 남았어요",
+    "audio_s": 2.426,
+    "phonemes": "ˈeɪtʃ pˈiː sˈɐm sˈip pəsˈɛntnˈɐmɐs-ˌʌjo"
+  },
+  {
+    "tag": "e06",
+    "text": "GG ez win",
+    "audio_s": 1.533,
+    "phonemes": "dʒˈiː dʒˈiːʲ ˈɛz wˈɪn"
+  },
+  {
+    "tag": "e07",
+    "text": "보스 체력 1,250,000 남음",
+    "audio_s": 2.543,
+    "phonemes": "pˈosɯ tʃhˈeɾjʌq pˈɛq ˈi sˈipˈo mˈɐnnɐmˈɯm"
+  },
+  {
+    "tag": "e08",
+    "text": "와... 이걸 깨네?!",
+    "audio_s": 1.312,
+    "phonemes": "wˈɐiqˈʌɫ q-ˈɛne?"
+  },
+  {
+    "tag": "e09",
+    "text": "형?? 거기 아니야ㅠㅠ",
+    "audio_s": 2.403,
+    "phonemes": "hjˈʌŋ?ɡˈʌqiʲ ˈɐnijˌɐjujˌu"
+  },
+  {
+    "tag": "e10",
+    "text": "닉네임: Player_01 님 감사합니다",
+    "audio_s": 3.355,
+    "phonemes": "nˈiqneˌim: plˈeɪə jˈʌŋ ˈirnˈim ɡˈɐmsɐhˌɐpnidˌɐ"
+  },
+  {
+    "tag": "e11",
+    "text": "😂👍 개웃기다",
+    "audio_s": 1.231,
+    "phonemes": "ɡɛˈut-k-idˌɐ"
+  }
+]

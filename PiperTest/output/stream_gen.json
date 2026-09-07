@@ -1,0 +1,38 @@
+{
+  "ttfa_ms": 43.2,
+  "generation_done_ms": 202.9,
+  "total_audio_s": 8.394,
+  "rtf_generation_only": 0.0242,
+  "chunks": [
+    {
+      "chunk": 0,
+      "ready_at_ms": 43.2,
+      "audio_s": 1.811,
+      "cumulative_audio_s": 1.811
+    },
+    {
+      "chunk": 1,
+      "ready_at_ms": 85.7,
+      "audio_s": 1.753,
+      "cumulative_audio_s": 3.564
+    },
+    {
+      "chunk": 2,
+      "ready_at_ms": 128.5,
+      "audio_s": 1.718,
+      "cumulative_audio_s": 5.283
+    },
+    {
+      "chunk": 3,
+      "ready_at_ms": 163.6,
+      "audio_s": 1.37,
+      "cumulative_audio_s": 6.653
+    },
+    {
+      "chunk": 4,
+      "ready_at_ms": 202.8,
+      "audio_s": 1.741,
+      "cumulative_audio_s": 8.394
+    }
+  ]
+}

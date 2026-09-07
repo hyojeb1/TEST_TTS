@@ -1,0 +1,37 @@
+{
+  "rows": [
+    {
+      "intra_op": 1,
+      "synth_ms_median": 102.5,
+      "rtf": 0.059,
+      "cores_used": 1.0,
+      "cpu_pct_of_32c": 3.1
+    },
+    {
+      "intra_op": 2,
+      "synth_ms_median": 62.6,
+      "rtf": 0.0361,
+      "cores_used": 2.0,
+      "cpu_pct_of_32c": 6.2
+    },
+    {
+      "intra_op": 4,
+      "synth_ms_median": 43.1,
+      "rtf": 0.0253,
+      "cores_used": 3.9,
+      "cpu_pct_of_32c": 12.1
+    },
+    {
+      "intra_op": "default(auto)",
+      "synth_ms_median": 42.9,
+      "rtf": 0.0255,
+      "cores_used": 23.9,
+      "cpu_pct_of_32c": 74.7
+    }
+  ],
+  "ort_providers": [
+    "AzureExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "nvidia_smi_compute_apps_during_run": "2468, C:\\Windows\\System32\\dwm.exe, [N/A]\n9628, C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\CrossDeviceResume.exe, [N/A]\n9848, C:\\Windows\\explorer.exe, [N/A]\n10608, C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\SearchHost.exe, [N/A]\n10628, C:\\Windows\\SystemApps\\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\\StartMenuExperienceHost.exe, [N/A]\n15160, C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\151.0.4129.107\\msedgewebview2.exe, [N/A]\n17160, C:\\Program Files\\Parsec\\parsecd.exe, [N/A]\n17204, C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\TextInputHost.exe, [N/A]\n17536, C:\\Program Files (x86)\\Steam\\bin\\cef\\cef.win64\\steamwebhelper.exe, [N/A]\n20856, C:\\Users\\user\\AppData\\Local\\Discord\\app-1.0.9255\\Discord.exe, [N/A]\n20224, C:\\Windows\\SystemApps\\ShellExperienceHost_cw5n1h2txyewy\\ShellExperienceHost.exe, [N/A]\n35272, C:\\Program Files\\WindowsApps\\Microsoft.YourPhone_1.26071.164.0_x64__8wekyb3d8bbwe\\PhoneExperienceHost.exe, [N/A]\n21092, C:\\Windows\\System32\\ApplicationFrameHost.exe, [N/A]\n29120, C:\\Windows\\ImmersiveControlPanel\\SystemSettings.exe, [N/A]\n44036, C:\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal_1.24.11911.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe, [N/A]\n30584, C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\CEF\\NVIDIA Overlay.exe, [N/A]\n37356, C:\\Program Files\\WindowsApps\\Microsoft.Edge.GameAssist_1.0.4019.0_x64__8wekyb3d8bbwe\\EdgeGameAssist.exe, [N/A]\n46656, C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\CEF\\NVIDIA Overlay.exe, [N/A]\n45280, C:\\Program Files\\Epic Games\\Launcher\\Engine\\Binaries\\Win64\\EpicWebHelper.exe, [N/A]\n50132, C:\\Program Files\\Epic Games\\Launcher\\Portal\\Binaries\\Win64\\EpicGamesLauncher.exe, [N/A]\n49320, C:\\Program Files (x86)\\Epic Games\\Epic Online Services\\managedArtifacts\\98bc04bc842e4906993fd6d6644ffb8d\\EOSOverlayRenderer-Win64-Shipping.exe, [N/A]\n24376, C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe, [N/A]\n31752, C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE, [N/A]\n42300, C:\\Program Files\\WindowsApps\\Microsoft.WindowsNotepad_11.2606.15.0_x64__8wekyb3d8bbwe\\Notepad\\Notepad.exe, [N/A]\n26736, C:\\Program Files\\Epic Games\\UE_5.7\\Engine\\Binaries\\Win64\\UnrealEditor.exe, [N/A]\n41132, C:\\Program Files\\Epic Games\\UE_5.7\\Engine\\Binaries\\Win64\\LiveCodingConsole.exe, [N/A]\n50656, C:\\Program Files\\Epic Games\\UE_5.7\\Engine\\Binaries\\Win64\\EpicWebHelper.exe, [N/A]\n40372, C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe, [N/A]\n41628, C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe, [N/A]\n49052, C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe, [N/A]\n13484, C:\\Windows\\System32\\ShellHost.exe, [N/A]\n5740, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.901.6511.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]\n28932, C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.901.6511.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe, [N/A]\n48812, C:\\Users\\user\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe, [N/A]"
+}

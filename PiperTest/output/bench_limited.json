@@ -1,0 +1,52 @@
+{
+  "config": "intra_op=2 / inter_op=1 / CPUExecutionProvider",
+  "session_create_ms": 876.8,
+  "sentences": [
+    {
+      "tag": "01",
+      "text": "도네이션 감사합니다.",
+      "synth_ms_median": 66.1,
+      "synth_ms_min": 62.9,
+      "ttfa_ms_median": 66.0,
+      "audio_s": 1.788,
+      "rtf": 0.037
+    },
+    {
+      "tag": "02",
+      "text": "아니 저걸 맞네.",
+      "synth_ms_median": 55.9,
+      "synth_ms_min": 53.8,
+      "ttfa_ms_median": 55.9,
+      "audio_s": 1.567,
+      "rtf": 0.0357
+    },
+    {
+      "tag": "03",
+      "text": "ㅋㅋㅋ 보스 패턴 뭐냐.",
+      "synth_ms_median": 64.0,
+      "synth_ms_min": 61.2,
+      "ttfa_ms_median": 64.0,
+      "audio_s": 1.741,
+      "rtf": 0.0368
+    },
+    {
+      "tag": "04",
+      "text": "형 거기 아니야.",
+      "synth_ms_median": 54.4,
+      "synth_ms_min": 50.8,
+      "ttfa_ms_median": 54.4,
+      "audio_s": 1.498,
+      "rtf": 0.0363
+    },
+    {
+      "tag": "05",
+      "text": "와 이걸 진짜 깨네.",
+      "synth_ms_median": 66.8,
+      "synth_ms_min": 61.7,
+      "ttfa_ms_median": 66.8,
+      "audio_s": 1.869,
+      "rtf": 0.0358
+    }
+  ],
+  "overall_rtf": 0.0363
+}

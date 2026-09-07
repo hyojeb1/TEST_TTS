@@ -1,0 +1,41 @@
+{
+  "text": "도네이션 감사합니다. 아니 저걸 맞네. ㅋㅋㅋ 보스 패턴 뭐냐. 형 거기 아니야. 와 이걸 진짜 깨네.",
+  "ttfa_ms": 49.7,
+  "playback_started_at_ms": 61.5,
+  "generation_done_ms": 8647.7,
+  "wall_incl_playback_ms": 8850.0,
+  "total_audio_s": 8.545,
+  "rtf_streaming": 1.012,
+  "chunks": [
+    {
+      "chunk": 0,
+      "ready_at_ms": 49.7,
+      "audio_s": 1.776,
+      "phonemes": "dˈoneˌisjʌn ɡˈɐmsɐhˌɐpnidˌɐ."
+    },
+    {
+      "chunk": 1,
+      "ready_at_ms": 1895.5,
+      "audio_s": 1.602,
+      "phonemes": "ˈɐni tɕʌqˈʌɫmˈɐnne."
+    },
+    {
+      "chunk": 2,
+      "ready_at_ms": 3520.1,
+      "audio_s": 1.788,
+      "phonemes": "khkhkh pˈosɯ phˈɛthʌnmwˈʌnjɐ."
+    },
+    {
+      "chunk": 3,
+      "ready_at_ms": 5294.5,
+      "audio_s": 1.521,
+      "phonemes": "hjˈʌŋ ɡˈʌqiʲ ˈɐnijˌɐ."
+    },
+    {
+      "chunk": 4,
+      "ready_at_ms": 6818.0,
+      "audio_s": 1.858,
+      "phonemes": "wˈɐ iqˈʌɫ tɕintɕˈɐ q-ˈɛne."
+    }
+  ]
+}

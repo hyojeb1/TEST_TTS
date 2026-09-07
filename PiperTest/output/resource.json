@@ -1,0 +1,48 @@
+{
+  "logical_cores": 32,
+  "physical_cores": 24,
+  "total_ram_gb": 127.8,
+  "ort_version": "1.29.0",
+  "ort_available_providers": [
+    "AzureExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "rss_after_load_mb": 136.8,
+  "rss_before_load_mb": 48.3,
+  "default_threads": {
+    "label": "onnxruntime default threads",
+    "iterations": 143,
+    "wall_s": 6.03,
+    "synth_ms_median": 42.1,
+    "audio_generated_s": 244.83,
+    "rtf": 0.0246,
+    "rss_peak_mb": 212.8,
+    "num_threads": 50,
+    "cpu_percent_of_one_core": 2391.5,
+    "cpu_percent_of_system": 74.73
+  },
+  "limited_threads_2": {
+    "label": "intra_op=2, inter_op=1",
+    "iterations": 98,
+    "wall_s": 6.05,
+    "synth_ms_median": 62.7,
+    "audio_generated_s": 167.94,
+    "rtf": 0.036,
+    "rss_peak_mb": 222.0,
+    "num_threads": 28,
+    "cpu_percent_of_one_core": 197.2,
+    "cpu_percent_of_system": 6.16
+  },
+  "rss_final_mb": 223.0,
+  "model_file_mb": 60.3,
+  "loaded_dlls": [
+    "libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+    "msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+    "msvcp140.dll",
+    "msvcp140_1.dll",
+    "msvcp_win.dll",
+    "onnxruntime_providers_shared.dll",
+    "vcruntime140.dll",
+    "vcruntime140_1.dll"
+  ]
+}
