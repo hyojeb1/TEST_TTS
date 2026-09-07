@@ -1,4 +1,7 @@
 #include <iostream>
+#include <io.h>
+#include <fcntl.h>
+
 #include <future>
 #include <atomic>
 
@@ -22,6 +25,9 @@ using namespace Windows::Storage::Streams;
 
 int wmain()
 {
+    _setmode(_fileno(stdout), _O_U16TEXT);
+    _setmode(_fileno(stderr), _O_U16TEXT);
+
     // WinRT 초기화
     winrt::init_apartment(winrt::apartment_type::multi_threaded);
 
@@ -34,16 +40,22 @@ int wmain()
         // --------------------------------------------------------
         std::wcout << L"=== Installed Voices ===\n";
 
+        auto voices = SpeechSynthesizer::AllVoices();
+
+        std::wcout
+            << L"Windows.Media.SpeechSynthesis -> "
+            << voices.Size()
+            << L"개\n\n";
+
         VoiceInformation koreanVoice{ nullptr };
 
-        for (const auto& voice : SpeechSynthesizer::AllVoices())
+        for (const auto& voice : voices)
         {
             std::wcout
                 << L"Name: " << voice.DisplayName().c_str()
                 << L" / Language: " << voice.Language().c_str()
                 << L"\n";
 
-            // 첫 번째 한국어 Voice 선택
             if (!koreanVoice && voice.Language() == L"ko-KR")
             {
                 koreanVoice = voice;

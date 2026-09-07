@@ -1,11 +1,16 @@
 ﻿#include <windows.h>
 #include <sapi.h>
 
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#include <sphelper.h>
+#pragma warning(pop)
+
+#pragma comment(lib, "sapi.lib")
 #pragma comment(lib, "sapi.lib")
 
 int main()
 {
-    // COM 초기화
     HRESULT hr = CoInitialize(nullptr);
 
     if (FAILED(hr))
@@ -21,15 +26,45 @@ int main()
         reinterpret_cast<void**>(&pVoice)
     );
 
-    pVoice->SetRate(5);  // 빠름
-
     if (SUCCEEDED(hr))
     {
-        pVoice->Speak(
-            L"안녕하세요. 윈도우 네이티브 티티에스 테스트입니다.",
-            SPF_DEFAULT,
-            nullptr
+        IEnumSpObjectTokens* pEnum = nullptr;
+
+        hr = SpEnumTokens(
+            SPCAT_VOICES,
+            nullptr,
+            nullptr,
+            &pEnum
         );
+
+        if (SUCCEEDED(hr))
+        {
+            ULONG count = 0;
+            pEnum->GetCount(&count);
+
+            wprintf(L"Voice count: %lu\n\n", count);
+
+            for (ULONG i = 0; i < count; ++i)
+            {
+                ISpObjectToken* pToken = nullptr;
+
+                if (pEnum->Next(1, &pToken, nullptr) == S_OK)
+                {
+                    WCHAR* description = nullptr;
+
+                    if (SUCCEEDED(SpGetDescription(pToken, &description)))
+                    {
+                        wprintf(L"[%lu] %s\n", i, description);
+
+                        CoTaskMemFree(description);
+                    }
+
+                    pToken->Release();
+                }
+            }
+
+            pEnum->Release();
+        }
 
         pVoice->Release();
     }
