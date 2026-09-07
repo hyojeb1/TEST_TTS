@@ -378,3 +378,6 @@ PiperTest/voices/*.onnx
 
 # Piper 테스트: 합성 산출물
 PiperTest/output/*.wav
+
+# Piper 테스트: libpiper 소스/빌드 트리 (build_win_x64.bat 로 재생성)
+PiperTest/third_party/
