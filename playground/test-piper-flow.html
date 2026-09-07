@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TEST_Piper.cpp 해부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#eef1ee; --surface:#ffffff; --sunk:#e4e8e5;
+  --ink:#131a1b; --muted:#5a6b68; --faint:#8b9a97;
+  --hair:rgba(19,26,27,.14); --hair-strong:rgba(19,26,27,.28);
+  --signal:#00705f; --signal-soft:rgba(0,112,95,.10); --signal-edge:rgba(0,112,95,.35);
+  --fault:#a83a24; --fault-soft:rgba(168,58,36,.09); --fault-edge:rgba(168,58,36,.32);
+  --shadow:0 1px 2px rgba(19,26,27,.05), 0 8px 24px -16px rgba(19,26,27,.22);
+  --display:"Hahmlet",Georgia,"Nanum Myeongjo",serif;
+  --body:"IBM Plex Sans KR",system-ui,"Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101618; --surface:#182023; --sunk:#0b1012;
+    --ink:#e4ebe9; --muted:#8fa19e; --faint:#647775;
+    --hair:rgba(228,235,233,.14); --hair-strong:rgba(228,235,233,.26);
+    --signal:#3ddcb4; --signal-soft:rgba(61,220,180,.11); --signal-edge:rgba(61,220,180,.36);
+    --fault:#ff9575; --fault-soft:rgba(255,149,117,.10); --fault-edge:rgba(255,149,117,.32);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101618; --surface:#182023; --sunk:#0b1012;
+  --ink:#e4ebe9; --muted:#8fa19e; --faint:#647775;
+  --hair:rgba(228,235,233,.14); --hair-strong:rgba(228,235,233,.26);
+  --signal:#3ddcb4; --signal-soft:rgba(61,220,180,.11); --signal-edge:rgba(61,220,180,.36);
+  --fault:#ff9575; --fault-soft:rgba(255,149,117,.10); --fault-edge:rgba(255,149,117,.32);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font:400 16px/1.68 var(--body); letter-spacing:-.003em;
+}
+:focus-visible{outline:2px solid var(--signal); outline-offset:3px; border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+.wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+h1,h2,h3{font-family:var(--display); font-weight:700; text-wrap:balance; margin:0}
+.eyebrow{
+  font:600 11px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase;
+  color:var(--faint); margin:0;
+}
+code,kbd{font-family:var(--mono); font-size:.875em}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- masthead ---------- */
+header.top{border-bottom:1px solid var(--hair); background:var(--surface)}
+.masthead{display:flex; flex-direction:column; gap:22px; padding:44px 0 32px}
+.masthead h1{font-size:clamp(2rem,4.4vw,3rem); line-height:1.1; letter-spacing:-.02em}
+.masthead h1 .path{display:block; font:600 .82rem/1.4 var(--mono); letter-spacing:0; color:var(--signal); margin-bottom:12px}
+.lede{max-width:62ch; margin:0; color:var(--muted); font-size:1.0625rem}
+.lede b{color:var(--ink); font-weight:500}
+
+/* ---------- waveform ---------- */
+.scope{
+  border-top:1px solid var(--hair); border-bottom:1px solid var(--hair);
+  background:var(--sunk);
+}
+.scope-inner{padding:22px 0 18px; display:flex; flex-direction:column; gap:12px}
+.scope-head{display:flex; flex-wrap:wrap; gap:6px 18px; align-items:baseline}
+.scope-head .said{font-family:var(--display); font-size:1.0625rem; font-weight:500}
+.scope-head .meta{font:400 12px/1 var(--mono); color:var(--faint)}
+.scope svg{display:block; width:100%; height:104px}
+.scope figcaption{font-size:.8125rem; color:var(--faint); margin:0}
+
+/* ---------- run readout ---------- */
+.readout{padding:26px 0 30px; border-bottom:1px solid var(--hair)}
+.readout .eyebrow{margin-bottom:14px}
+.stats{
+  display:grid; gap:1px; background:var(--hair);
+  grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  border:1px solid var(--hair);
+}
+.stat{background:var(--surface); padding:12px 14px}
+.stat dt{font:600 10px/1.2 var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--faint)}
+.stat dd{margin:5px 0 0; font:600 1.1rem/1.15 var(--mono); letter-spacing:-.02em}
+.stat dd small{font:400 .68em/1 var(--mono); color:var(--muted); margin-left:2px}
+
+/* ---------- 2-track body ---------- */
+.body-grid{display:grid; gap:0; padding:40px 0 8px}
+@media (min-width:940px){
+  .body-grid{grid-template-columns:206px minmax(0,1fr); gap:48px; align-items:start}
+}
+nav.rail{display:none}
+@media (min-width:940px){
+  nav.rail{display:block; position:sticky; top:24px}
+  nav.rail .eyebrow{margin-bottom:12px}
+  nav.rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column}
+  nav.rail a{
+    display:grid; grid-template-columns:22px 1fr; gap:9px; align-items:baseline;
+    padding:7px 0 7px 10px; border-left:2px solid var(--hair);
+    color:var(--muted); text-decoration:none; font-size:.875rem;
+    transition:color .15s, border-color .15s;
+  }
+  nav.rail a .n{font:600 11px/1.5 var(--mono); color:var(--faint)}
+  nav.rail a:hover{color:var(--ink)}
+  nav.rail a[aria-current="true"]{color:var(--ink); border-left-color:var(--signal); font-weight:500}
+  nav.rail a[aria-current="true"] .n{color:var(--signal)}
+}
+
+.track{display:flex; flex-direction:column; gap:0; min-width:0}
+
+/* ---------- stage ---------- */
+.stage{padding:0 0 44px; border-bottom:1px solid var(--hair); margin-bottom:44px}
+.stage:last-of-type{border-bottom:0}
+.stage-head{display:flex; gap:14px; align-items:baseline; margin-bottom:6px}
+.stage-head .n{
+  flex:none; font:600 12px/1.6 var(--mono); color:var(--signal);
+  padding-top:.25em;
+}
+.stage-head h2{font-size:1.4rem; letter-spacing:-.015em}
+.stage .sig{font:400 12.5px/1.5 var(--mono); color:var(--muted); margin:0 0 18px 34px}
+.stage > p, .stage > ul{max-width:66ch}
+.stage p{margin:0 0 14px}
+.stage ul{margin:0 0 14px; padding-left:1.15em}
+.stage li{margin-bottom:6px}
+.stage li::marker{color:var(--faint)}
+strong{font-weight:600}
+em.term{font-style:normal; font-family:var(--mono); font-size:.86em; color:var(--signal)}
+
+/* ---------- code ---------- */
+.code{
+  background:var(--surface); border:1px solid var(--hair); box-shadow:var(--shadow);
+  margin:0 0 18px; overflow-x:auto;
+}
+.code figcaption{
+  font:600 10px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
+  color:var(--faint); padding:10px 14px; border-bottom:1px solid var(--hair);
+  position:sticky; left:0;
+}
+.code pre{margin:0; padding:14px; font:400 13px/1.65 var(--mono); white-space:pre}
+.c-key{color:var(--signal); font-weight:600}
+.c-com{color:var(--faint)}
+.c-str{color:var(--fault)}
+.c-hi{background:var(--signal-soft); box-shadow:-4px 0 0 var(--signal); display:inline-block; width:100%}
+.c-bad{background:var(--fault-soft); box-shadow:-4px 0 0 var(--fault); display:inline-block; width:100%}
+
+/* ---------- trap ---------- */
+.trap{
+  border-left:3px solid var(--fault); background:var(--fault-soft);
+  padding:16px 18px; margin:0 0 18px; max-width:70ch;
+}
+.trap .eyebrow{color:var(--fault); margin-bottom:8px}
+.trap h3{font-family:var(--body); font-size:.9375rem; font-weight:600; margin-bottom:6px}
+.trap p{margin:0 0 8px; font-size:.9375rem}
+.trap p:last-child{margin-bottom:0}
+.trap .err{font-family:var(--mono); font-size:.84em; color:var(--fault)}
+
+/* ---------- table ---------- */
+.tbl-scroll{overflow-x:auto; margin:0 0 18px; border:1px solid var(--hair); background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:.875rem}
+th,td{text-align:left; padding:9px 13px; border-bottom:1px solid var(--hair); white-space:nowrap}
+thead th{
+  font:600 10px/1.2 var(--mono); letter-spacing:.1em; text-transform:uppercase;
+  color:var(--faint); background:var(--sunk);
+}
+tbody tr:last-child td{border-bottom:0}
+td.mono,th.mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
+td.rc{font-family:var(--mono); font-weight:600}
+.ok{color:var(--signal)} .bad{color:var(--fault)}
+
+/* ---------- state machine ---------- */
+.panel{
+  border:1px solid var(--hair); background:var(--surface); box-shadow:var(--shadow);
+  padding:20px; margin:0 0 18px;
+}
+.panel > .eyebrow{margin-bottom:14px}
+.sm{overflow-x:auto}
+.sm svg{display:block; width:100%; min-width:460px; height:auto}
+
+/* ---------- byte map ---------- */
+.bytes{display:flex; flex-direction:column; gap:1px; background:var(--hair); border:1px solid var(--hair)}
+.brow{
+  display:grid; grid-template-columns:64px minmax(148px,auto) 1fr;
+  gap:1px; background:var(--hair);
+}
+.brow > *{background:var(--surface); padding:8px 11px; font-size:.8125rem}
+.brow .off{font:400 12px/1.5 var(--mono); color:var(--faint)}
+.brow .hex{font:600 12px/1.5 var(--mono); color:var(--signal); letter-spacing:.04em}
+.brow .what{color:var(--muted)}
+.brow .what b{color:var(--ink); font-weight:500}
+.brow.tag .hex{color:var(--fault)}
+@media (max-width:560px){
+  .brow{grid-template-columns:52px 1fr; }
+  .brow .what{grid-column:1 / -1; border-top:1px dashed var(--hair)}
+}
+
+/* ---------- closing ---------- */
+.close{border-top:1px solid var(--hair); background:var(--surface); margin-top:20px}
+.close-inner{padding:38px 0 46px; display:grid; gap:34px}
+@media (min-width:820px){.close-inner{grid-template-columns:1fr 1fr; gap:48px}}
+.close h2{font-size:1.25rem; margin-bottom:12px}
+.close p{max-width:60ch; margin:0 0 12px; font-size:.9375rem; color:var(--muted)}
+.close p b{color:var(--ink); font-weight:500}
+.filelist{list-style:none; margin:0; padding:0; font:400 12.5px/1.9 var(--mono)}
+.filelist li{display:flex; gap:10px; justify-content:space-between; border-bottom:1px dashed var(--hair); padding:3px 0}
+.filelist .r{color:var(--faint); flex:none}
+footer.foot{border-top:1px solid var(--hair); padding:20px 0 34px; font-size:.8125rem; color:var(--faint)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap masthead">
+    <h1><span class="path">ConsoleApplication1\TEST_Piper.cpp</span>libpiper C API로 한국어 한 문장 합성하기</h1>
+    <p class="lede">Python도, <code>piper.exe</code>도 없다. 이 프로그램은 <b>piper.dll</b> 하나를 직접 링크해
+      <b>ko_KR-kss-medium.onnx</b>를 메모리에 올리고, 한국어 문장을 float32 PCM으로 받아 재생 가능한 WAV로 떨군다.
+      전체가 6단계이고, 그중 <b>3곳에 Windows 특유의 함정</b>이 있다.</p>
+  </div>
+</header>
+
+<figure class="scope">
+  <div class="wrap scope-inner">
+    <div class="scope-head">
+      <span class="said">&ldquo;도네이션 감사합니다&rdquo;</span>
+      <span class="meta">out\donation.raw &middot; 42,240 samples &middot; 22,050 Hz mono float32 &middot; 1.916 s</span>
+    </div>
+    <svg id="wave" viewBox="0 0 1000 104" preserveAspectRatio="none" role="img"
+         aria-label="합성된 오디오의 진폭 포락선. 앞뒤에 약 0.2초씩 무음 패딩이 있고, 가운데 다섯 개의 음절 덩어리가 보인다."></svg>
+    <figcaption>이 페이지의 파형과 모든 수치는 실제 실행 결과다. 최고 진폭은 0.4947 — libpiper는 모델 출력을 정규화하지 않는다.</figcaption>
+  </div>
+</figure>
+
+<section class="wrap readout">
+  <p class="eyebrow">실제 실행 출력</p>
+  <dl class="stats">
+    <div class="stat"><dt>model load</dt><dd class="num">549.3<small>ms</small></dd></div>
+    <div class="stat"><dt>TTFA</dt><dd class="num">146.5<small>ms</small></dd></div>
+    <div class="stat"><dt>chunks</dt><dd class="num">1</dd></div>
+    <div class="stat"><dt>audio</dt><dd class="num">1.916<small>s</small></dd></div>
+    <div class="stat"><dt>RTF</dt><dd class="num">0.0765</dd></div>
+    <div class="stat"><dt>exit</dt><dd class="num ok">0</dd></div>
+  </dl>
+</section>
+
+<div class="wrap body-grid">
+
+  <nav class="rail" aria-label="실행 단계">
+    <p class="eyebrow">wmain 실행 순서</p>
+    <ol>
+      <li><a href="#s1"><span class="n">01</span><span>문자열을 UTF-8로</span></a></li>
+      <li><a href="#s2"><span class="n">02</span><span>모델 로딩</span></a></li>
+      <li><a href="#s3"><span class="n">03</span><span>합성 시작</span></a></li>
+      <li><a href="#s4"><span class="n">04</span><span>chunk 순회</span></a></li>
+      <li><a href="#s5"><span class="n">05</span><span>PCM · WAV 쓰기</span></a></li>
+      <li><a href="#s6"><span class="n">06</span><span>측정값 출력</span></a></li>
+    </ol>
+  </nav>
+
+  <main class="track">
+
+    <!-- 01 -->
+    <section class="stage" id="s1">
+      <div class="stage-head"><span class="n">01</span><h2>문자열을 UTF-8로 만든다</h2></div>
+      <p class="sig">wmain(argc, argv) &rarr; ToUtf8() &rarr; std::string</p>
+      <p><code>main</code>이 아니라 <code>wmain</code>을 쓴다. 진입점이 <code>wchar_t* argv[]</code>를 주기 때문에
+        명령줄로 넘긴 한국어가 UTF-16으로 그대로 들어온다. 그 다음 <code>WideCharToMultiByte(CP_UTF8, …)</code>로
+        UTF-8 바이트열을 만든다.</p>
+      <figure class="code">
+        <figcaption>TEST_Piper.cpp — 진입점</figcaption>
+<pre><span class="c-key">int</span> wmain(<span class="c-key">int</span> argc, <span class="c-key">wchar_t</span>* argv[]) {
+    ::SetConsoleOutputCP(CP_UTF8);
+
+<span class="c-hi">    <span class="c-key">const</span> std::string text =
+        (argc &gt; 1) ? ToUtf8(argv[1]) : ToUtf8(<span class="c-str">L"도네이션 감사합니다"</span>);</span></pre>
+      </figure>
+      <div class="trap">
+        <p class="eyebrow">함정 1 / 3</p>
+        <h3>좁은 문자열 리터럴을 그대로 넘기면 안 된다</h3>
+        <p><code>piper_synthesize_start</code>는 <b>UTF-8 바이트</b>를 요구한다. 그런데 한국어 로케일 Windows에서
+          MSVC의 실행 문자셋 기본값은 <b>CP949</b>다. <code>"도네이션…"</code>을 그냥 넘기면 espeak가 해독하지 못한다.</p>
+        <p>소스 파일 자체도 <b>UTF-8 BOM</b>으로 저장해야 한다. BOM이 없으면 MSVC가 소스를 CP949로 읽어
+          <span class="err">error C3688: 잘못된 리터럴 접두사</span> 로 컴파일부터 실패한다.
+          그래서 이 코드는 wide 리터럴 + 명시적 변환이라는 두 단계를 거친다.</p>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="stage" id="s2">
+      <div class="stage-head"><span class="n">02</span><h2>모델을 메모리에 올린다</h2></div>
+      <p class="sig">piper_create(model_path, config_path, espeak_data_path) &rarr; piper_synthesizer*</p>
+      <p>경로 세 개를 넘기는 단 한 번의 호출이다. 이 안에서 세 가지가 일어난다.</p>
+      <ul>
+        <li><code>.onnx.json</code>을 읽어 <em class="term">sample_rate 22050</em>,
+          <em class="term">espeak.voice "ko"</em>, 음소 ID 맵 <span class="num">161</span>개를 세팅</li>
+        <li><code>espeak_Initialize()</code>로 <code>espeak-ng-data</code>(19 MB, <code>ko_dict</code> 포함) 적재</li>
+        <li>onnxruntime 세션 생성 — libpiper가 <code>SetIntraOpNumThreads(1)</code>로 <b>1코어에 고정</b></li>
+      </ul>
+      <p>실패하면 예외가 아니라 <b><code>nullptr</code></b>을 돌려준다. C API이므로 반환값 검사가 유일한 방어선이다.
+        측정값은 <span class="num">549 ms</span> — 게임에서는 로딩 화면에서 딱 한 번만 하면 되는 비용이다.</p>
+      <div class="trap">
+        <p class="eyebrow">함정 2 / 3</p>
+        <h3>Windows 11은 System32에 낡은 onnxruntime을 갖고 있다</h3>
+        <p><code>C:\Windows\System32\onnxruntime.dll</code>은 Windows ML용 <b>1.17</b>이다.
+          <code>piper.dll</code>은 ORT <b>API 22</b>(1.22.0)를 요구한다.</p>
+        <p>DLL 검색 순서상 exe와 같은 폴더가 System32보다 먼저다. 즉
+          <b>1.22.0을 exe 옆에 복사해두지 않으면</b> System32 것이 로드되어
+          <span class="err">The requested API version [22] is not available</span> 로 죽는다.
+          <code>.vcxproj</code>의 PostBuildEvent가 DLL 3개를 <code>$(OutDir)</code>로 복사하는 이유다.</p>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section class="stage" id="s3">
+      <div class="stage-head"><span class="n">03</span><h2>합성을 시작한다 &mdash; 아직 소리는 없다</h2></div>
+      <p class="sig">piper_default_synthesize_options() &rarr; piper_synthesize_start() &rarr; PIPER_OK</p>
+      <p>이 호출은 <b>텍스트를 음소 ID 큐로 바꾸는 것까지만</b> 한다. 신경망은 아직 돌지 않는다.</p>
+      <figure class="code">
+        <figcaption>단계 03 — 음소화까지</figcaption>
+<pre>piper_synthesize_options options = piper_default_synthesize_options(synth);
+<span class="c-com">// speaker_id 0 / length_scale 1.0 / noise_scale 0.667 / noise_w_scale 0.8</span>
+
+<span class="c-key">if</span> (piper_synthesize_start(synth, text.c_str(), &amp;options) != PIPER_OK) {
+    std::printf(<span class="c-str">"[FAIL] piper_synthesize_start failed\n"</span>);
+    piper_free(synth); <span class="c-key">return</span> 1;
+}</pre>
+      </figure>
+      <p>DLL 안에서 벌어지는 일을 계측해 확인한 결과는 이렇다.</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>단계</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr><td>espeak_SetVoiceByName</td><td class="mono">"ko" &rarr; EE_OK</td></tr>
+            <tr><td>espeak &rarr; IPA 음소</td><td class="mono">d&#x2c8;one&#x2cc;isj&#x28c;n &#x261;&#x2c8;&#x250;ms&#x250;h&#x2cc;&#x250;pnid&#x2cc;&#x250;</td></tr>
+            <tr><td>문장 분리</td><td class="mono">2개 (두 번째는 빈 문장)</td></tr>
+            <tr><td>음소 ID 큐</td><td class="mono">1개 &larr; 문장 하나당 chunk 하나</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>큐 길이가 곧 나올 chunk 개수다. <b>한 문장 = chunk 1개</b>라는 이 사실이 다음 단계의 함정으로 이어진다.</p>
+    </section>
+
+    <!-- 04 -->
+    <section class="stage" id="s4">
+      <div class="stage-head"><span class="n">04</span><h2>chunk를 순회한다 &mdash; 이 파일의 핵심</h2></div>
+      <p class="sig">piper_synthesize_next(synth, &amp;chunk) &rarr; PIPER_OK | PIPER_DONE | PIPER_ERR_GENERIC</p>
+      <p>큐에서 문장 하나를 꺼내 onnxruntime을 돌리고 float32 샘플을 채운다. 반환값은 세 가지다.</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th class="mono">rc</th><th>상수</th><th>실제 의미</th></tr></thead>
+          <tbody>
+            <tr><td class="rc ok">0</td><td class="mono">PIPER_OK</td><td>chunk를 채웠고, <b>뒤에 더 있다</b></td></tr>
+            <tr><td class="rc ok">1</td><td class="mono">PIPER_DONE</td><td>chunk를 채웠고, <b>이게 마지막이다</b></td></tr>
+            <tr><td class="rc bad">&minus;1</td><td class="mono">PIPER_ERR_GENERIC</td><td>실패. chunk는 비어 있다</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="trap">
+        <p class="eyebrow">함정 3 / 3 &mdash; 가장 오래 걸린 것</p>
+        <h3>PIPER_DONE은 &ldquo;데이터 없음&rdquo;이 아니라 &ldquo;이게 마지막&rdquo;이다</h3>
+        <p>libpiper의 <code>piper_synthesize_next</code> 마지막 줄은
+          <code>return chunk-&gt;is_last ? PIPER_DONE : PIPER_OK;</code> 다.
+          <b>마지막 chunk를 PIPER_DONE과 함께</b> 반환한다.</p>
+        <p>그런데 libpiper README의 공식 예제는 <code>while (next(…) != PIPER_DONE)</code> 로 되어 있어
+          그 마지막 chunk를 버린다. 문장이 여러 개면 앞부분은 나오니 눈치채기 어렵지만,
+          <b>문장이 하나뿐이면 유일한 chunk가 곧 마지막이라 오디오가 0바이트</b>가 된다.
+          증상은 <span class="err">[FAIL] no audio produced</span> 하나뿐이고, 모델 로딩도 음소화도 전부 성공한 상태라
+          원인이 전혀 드러나지 않는다.</p>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">&ldquo;도네이션 감사합니다&rdquo; 한 문장을 넣었을 때</p>
+        <div class="sm">
+          <svg viewBox="0 0 700 218" role="img" aria-label="한 문장 입력 시 next()는 첫 호출에서 오디오를 담은 채 PIPER_DONE을 반환한다. README 방식 루프는 그 chunk를 버려 0바이트를 얻고, 올바른 루프는 42240 샘플을 얻는다.">
+            <defs>
+              <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+              </marker>
+              <marker id="arf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--fault)"/>
+              </marker>
+            </defs>
+            <g font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--ink)">
+              <!-- call box -->
+              <rect x="10" y="82" width="150" height="54" fill="var(--sunk)" stroke="var(--hair-strong)"/>
+              <text x="85" y="104" text-anchor="middle" font-size="12.5">next(&amp;chunk)</text>
+              <text x="85" y="122" text-anchor="middle" font-size="11" fill="var(--muted)">1번째 호출</text>
+
+              <!-- arrow to result -->
+              <g color="var(--signal)" stroke="var(--signal)" stroke-width="1.4">
+                <line x1="160" y1="109" x2="222" y2="109" marker-end="url(#ar)"/>
+              </g>
+
+              <!-- returned chunk -->
+              <rect x="228" y="66" width="188" height="86" fill="var(--signal-soft)" stroke="var(--signal-edge)"/>
+              <text x="240" y="88" font-size="11.5" fill="var(--signal)" font-weight="600">rc = PIPER_DONE (1)</text>
+              <text x="240" y="108" font-size="11.5">num_samples = 42240</text>
+              <text x="240" y="126" font-size="11.5">is_last = true</text>
+              <text x="240" y="144" font-size="11" fill="var(--muted)">&larr; 오디오가 여기 들어 있다</text>
+
+              <!-- split arrows -->
+              <g stroke-width="1.4">
+                <g color="var(--fault)" stroke="var(--fault)">
+                  <path d="M416 92 C 460 92 470 52 512 52" fill="none" marker-end="url(#arf)"/>
+                </g>
+                <g color="var(--signal)" stroke="var(--signal)">
+                  <path d="M416 126 C 460 126 470 166 512 166" fill="none" marker-end="url(#ar)"/>
+                </g>
+              </g>
+
+              <!-- wrong -->
+              <rect x="518" y="24" width="172" height="58" fill="var(--fault-soft)" stroke="var(--fault-edge)"/>
+              <text x="530" y="44" font-size="10.5" font-weight="600" fill="var(--fault)" font-family="IBM Plex Sans KR, sans-serif">README 예제 루프</text>
+              <text x="530" y="61" font-size="11">while (rc != DONE)</text>
+              <text x="530" y="76" font-size="11" fill="var(--fault)">&rarr; 0 samples</text>
+
+              <!-- right -->
+              <rect x="518" y="138" width="172" height="58" fill="var(--signal-soft)" stroke="var(--signal-edge)"/>
+              <text x="530" y="158" font-size="10.5" font-weight="600" fill="var(--signal)" font-family="IBM Plex Sans KR, sans-serif">이 파일의 루프</text>
+              <text x="530" y="175" font-size="11">num_samples &gt; 0 검사</text>
+              <text x="530" y="190" font-size="11" fill="var(--signal)">&rarr; 42240 samples</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <p>그래서 반환값이 아니라 <b>chunk 필드</b>를 기준으로 순회한다. 상류 <code>piper_exe</code>가
+        <code>src/main/utils/wavfile.cpp</code>에서 쓰는 방식과 같다.</p>
+      <figure class="code">
+        <figcaption>단계 04 — 올바른 순회</figcaption>
+<pre>piper_audio_chunk chunk = piper_audio_chunk();
+<span class="c-key">for</span> (;;) {
+    <span class="c-key">const</span> <span class="c-key">int</span> rc = piper_synthesize_next(synth, &amp;chunk);
+    <span class="c-key">if</span> (rc != PIPER_OK &amp;&amp; rc != PIPER_DONE) { <span class="c-com">/* 진짜 오류 */</span> }
+
+<span class="c-hi">    <span class="c-key">if</span> (chunk.samples != <span class="c-key">nullptr</span> &amp;&amp; chunk.num_samples &gt; 0) {
+        <span class="c-com">// chunk.samples 는 다음 호출에서 무효화된다 &mdash; 반드시 복사</span>
+        pcm.insert(pcm.end(), chunk.samples, chunk.samples + chunk.num_samples);
+    }</span>
+
+<span class="c-hi">    <span class="c-key">if</span> (rc == PIPER_DONE || chunk.is_last) { <span class="c-key">break</span>; }</span>
+}</pre>
+      </figure>
+      <p>두 가지를 더 챙겨야 한다. <code>chunk.samples</code>가 가리키는 버퍼는 <b>다음 호출에서 재사용</b>되므로
+        즉시 복사해야 한다. 그리고 <b>TTFA</b>는 루프 시작이 아니라 <b>비어 있지 않은 첫 chunk가 도착한 순간</b>에
+        찍어야 의미가 있다 &mdash; 게임에서 중요한 건 전체 생성 시간이 아니라 말이 언제 시작되느냐다.</p>
+    </section>
+
+    <!-- 05 -->
+    <section class="stage" id="s5">
+      <div class="stage-head"><span class="n">05</span><h2>float32 그대로, 그리고 16-bit WAV로</h2></div>
+      <p class="sig">WriteAll(&hellip;.raw) &rarr; FloatToPcm16() &rarr; MakeWavHeader() &rarr; WriteAll(&hellip;.wav)</p>
+      <p>같은 오디오를 두 형식으로 남긴다. <code>.raw</code>는 libpiper가 준 float32를 손대지 않은 것 &mdash;
+        엔진에 스트리밍으로 밀어넣을 때 쓸 형식이다. <code>.wav</code>는 Windows에서 바로 재생하려고
+        int16으로 변환하고 44바이트 헤더를 붙인 것이다.</p>
+      <figure class="code">
+        <figcaption>변환 — 클램프를 잊으면 소리가 깨진다</figcaption>
+<pre><span class="c-key">int16_t</span> FloatToPcm16(<span class="c-key">float</span> sample) {
+    <span class="c-key">float</span> v = sample * 32767.0F;
+    <span class="c-key">if</span> (v &gt;  32767.0F) { v =  32767.0F; }
+    <span class="c-key">if</span> (v &lt; -32768.0F) { v = -32768.0F; }
+    <span class="c-key">return</span> <span class="c-key">static_cast</span>&lt;<span class="c-key">int16_t</span>&gt;(v);
+}</pre>
+      </figure>
+      <p>이번 출력의 최고 진폭은 <span class="num">0.4947</span>이라 클리핑이 0%였다. 하지만 libpiper는
+        <b>정규화를 하지 않는다</b>(Python API의 <code>normalize_audio=True</code>에 해당하는 처리가 없다).
+        모델이 <code>±1.0</code>을 넘겨줄 수 있으므로 클램프는 선택이 아니다.</p>
+
+      <div class="panel">
+        <p class="eyebrow">MakeWavHeader가 만든 44바이트 &mdash; donation.wav 실제 값</p>
+        <div class="bytes">
+          <div class="brow tag"><span class="off">0&ndash;3</span><span class="hex">52 49 46 46</span><span class="what"><b>"RIFF"</b> 청크 식별자</span></div>
+          <div class="brow"><span class="off">4&ndash;7</span><span class="hex">24 4a 01 00</span><span class="what">이후 크기 <b>84,516</b> = 36 + 데이터 &middot; little-endian</span></div>
+          <div class="brow tag"><span class="off">8&ndash;11</span><span class="hex">57 41 56 45</span><span class="what"><b>"WAVE"</b> 포맷</span></div>
+          <div class="brow tag"><span class="off">12&ndash;15</span><span class="hex">66 6d 74 20</span><span class="what"><b>"fmt "</b> &mdash; 끝의 공백까지 4바이트다</span></div>
+          <div class="brow"><span class="off">16&ndash;19</span><span class="hex">10 00 00 00</span><span class="what">fmt 청크 크기 <b>16</b></span></div>
+          <div class="brow"><span class="off">20&ndash;21</span><span class="hex">01 00</span><span class="what">포맷 <b>1 = PCM</b> (float32로 쓰면 3이 된다)</span></div>
+          <div class="brow"><span class="off">22&ndash;23</span><span class="hex">01 00</span><span class="what">채널 <b>1</b> &mdash; mono</span></div>
+          <div class="brow"><span class="off">24&ndash;27</span><span class="hex">22 56 00 00</span><span class="what">샘플레이트 <b>22,050</b> Hz</span></div>
+          <div class="brow"><span class="off">28&ndash;31</span><span class="hex">44 ac 00 00</span><span class="what">바이트레이트 <b>44,100</b> = 22050 &times; 1 &times; 2</span></div>
+          <div class="brow"><span class="off">32&ndash;33</span><span class="hex">02 00</span><span class="what">블록 정렬 <b>2</b></span></div>
+          <div class="brow"><span class="off">34&ndash;35</span><span class="hex">10 00</span><span class="what">비트 심도 <b>16</b></span></div>
+          <div class="brow tag"><span class="off">36&ndash;39</span><span class="hex">64 61 74 61</span><span class="what"><b>"data"</b> &mdash; 바로 뒤부터 샘플</span></div>
+          <div class="brow"><span class="off">40&ndash;43</span><span class="hex">00 4a 01 00</span><span class="what">데이터 크기 <b>84,480</b> = 42,240 &times; 2</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section class="stage" id="s6">
+      <div class="stage-head"><span class="n">06</span><h2>측정값을 찍고 끝낸다</h2></div>
+      <p class="sig">piper_free(synth) &rarr; printf(&hellip;) &rarr; return 0</p>
+      <p>정리는 <code>piper_free(synth)</code> 한 번이다. 이 프로그램은 chunk 루프가 끝난 직후,
+        파일을 쓰기 <b>전에</b> 해제한다 &mdash; 샘플은 이미 <code>pcm</code> 벡터로 복사해뒀으므로 안전하다.</p>
+      <p>마지막으로 찍는 <b>RTF</b>(Real-Time Factor)가 이 테스트의 결론이다.</p>
+      <figure class="code">
+        <figcaption>RTF</figcaption>
+<pre>RTF = synthesis_time / audio_duration
+    = 0.1465 s / 1.916 s
+    = <span class="c-key">0.0765</span>   <span class="c-com">// 실시간의 13배 속도. 1보다 작으면 실시간보다 빠르다.</span></pre>
+      </figure>
+      <p>참고로 같은 모델을 Python <code>piper-tts</code>로 돌리면 TTFA <span class="num">43 ms</span>,
+        RTF <span class="num">0.026</span>으로 <b>C++보다 3배 빠르다.</b> 코드 탓이 아니다. libpiper의
+        <code>piper.cpp</code>가 onnxruntime 스레드를 <code>intra_op = 1</code>로 하드코딩해 놓았고,
+        C API로는 이 값이 노출되지 않는다. Python 쪽을 같은 <code>intra_op=1</code>로 맞추면
+        <span class="num">102 ms</span> / RTF <span class="num">0.059</span>로 같은 수준이 된다.</p>
+      <p>게임에 붙일 때는 오히려 이 기본값이 유리하다. onnxruntime 기본 설정은 이 머신에서
+        <b>24코어(시스템 75%)</b>를 순간 점유하는데, 1코어로 묶여 있어도 RTF 0.0765면 충분히 빠르다.</p>
+    </section>
+
+  </main>
+</div>
+
+<section class="close">
+  <div class="wrap close-inner">
+    <div>
+      <h2>빌드하고 실행하기</h2>
+      <p><b>1.</b> libpiper를 먼저 빌드한다. espeak-ng는 소스에서, onnxruntime 1.22.0은 자동 다운로드된다.
+        첫 빌드에 약 5분.</p>
+      <figure class="code">
+        <figcaption>libpiper (MSVC 2022 + Ninja, Release x64)</figcaption>
+<pre>PiperTest\third_party\piper1-gpl\libpiper\build_win_x64.bat</pre>
+      </figure>
+      <p><b>2.</b> 콘솔 프로그램은 <code>Release|x64</code>에서만 <code>TEST_Piper.cpp</code>를 빌드한다.
+        <code>Debug|x64</code>는 기존 <code>TEST_SpeechSynthesis.cpp</code> 그대로다.</p>
+      <figure class="code">
+        <figcaption>실행 — 인자로 다른 문장도 넣을 수 있다</figcaption>
+<pre>x64\Release\ConsoleApplication1.exe
+x64\Release\ConsoleApplication1.exe <span class="c-str">"형 거기 아니야."</span></pre>
+      </figure>
+    </div>
+    <div>
+      <h2>이 프로그램이 쓰는 것</h2>
+      <ul class="filelist">
+        <li><span>piper.dll</span><span class="r">875 KB</span></li>
+        <li><span>piper.lib</span><span class="r">36 KB</span></li>
+        <li><span>piper.h</span><span class="r">8.8 KB</span></li>
+        <li><span>onnxruntime.dll <em>1.22.0</em></span><span class="r">12.4 MB</span></li>
+        <li><span>onnxruntime_providers_shared.dll</span><span class="r">22 KB</span></li>
+        <li><span>espeak-ng-data\</span><span class="r">19 MB</span></li>
+        <li><span>ko_KR-kss-medium.onnx</span><span class="r">60.3 MB</span></li>
+        <li><span>ko_KR-kss-medium.onnx.json</span><span class="r">5.2 KB</span></li>
+      </ul>
+      <p style="margin-top:16px">GPU는 전혀 쓰지 않는다. onnxruntime CPU 빌드라 사용 가능한
+        execution provider가 <code>CPUExecutionProvider</code>뿐이고, 실행 중 <code>nvidia-smi</code>에
+        프로세스가 잡히지 않는다.</p>
+    </div>
+  </div>
+  <div class="wrap"><footer class="foot">
+    수치는 2026-09-07 측정 &middot; Windows 11 Pro 26200 &middot; 24C/32T &middot; libpiper 1.8.0 (piper1-gpl) &middot;
+    ko_KR-kss-medium &middot; CPU 추론
+  </footer></div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  // 실제 out\donation.raw 에서 뽑은 200구간 피크 포락선 (0-100 정규화)
+  var ENV = [1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,13,9,67,77,78,79,78,79,
+    80,78,75,69,64,50,31,22,21,19,16,25,39,45,53,59,64,69,68,67,66,64,63,61,59,
+    60,60,59,50,30,14,19,19,28,23,17,10,17,43,51,82,100,94,89,81,53,32,13,12,12,
+    11,7,2,9,11,14,26,51,56,55,66,83,91,91,72,53,28,30,28,25,20,18,12,7,17,11,22,
+    57,91,87,73,73,74,71,66,65,61,53,49,44,43,31,14,15,15,16,16,16,18,19,20,22,29,
+    34,39,40,39,38,34,25,4,2,0,0,15,40,47,40,32,33,34,41,34,30,32,28,27,23,23,19,
+    14,14,11,12,7,6,3,3,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0];
+
+  var W = 1000, H = 104, MID = H / 2, PAD = 3;
+  var svg = document.getElementById("wave");
+  if (!svg) { return; }
+  var NS = "http://www.w3.org/2000/svg";
+  var n = ENV.length, step = W / n;
+
+  function el(name, attrs) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) { e.setAttribute(k, attrs[k]); }
+    return e;
+  }
+
+  // 0선
+  svg.appendChild(el("line", {
+    x1: 0, y1: MID, x2: W, y2: MID,
+    stroke: "var(--hair-strong)", "stroke-width": 1
+  }));
+
+  // 대칭 포락선 채우기
+  var up = [], down = [];
+  for (var i = 0; i < n; i++) {
+    var x = i * step + step / 2;
+    var h = (ENV[i] / 100) * (MID - PAD);
+    up.push(x.toFixed(1) + " " + (MID - h).toFixed(1));
+    down.unshift(x.toFixed(1) + " " + (MID + h).toFixed(1));
+  }
+  svg.appendChild(el("path", {
+    d: "M" + up.join(" L") + " L" + down.join(" L") + " Z",
+    fill: "var(--signal-soft)", stroke: "none"
+  }));
+
+  // 막대 (실제 샘플 구간)
+  for (var j = 0; j < n; j++) {
+    var hh = (ENV[j] / 100) * (MID - PAD);
+    if (hh < 0.6) { hh = 0.6; }
+    svg.appendChild(el("line", {
+      x1: (j * step + step / 2).toFixed(1), y1: (MID - hh).toFixed(1),
+      x2: (j * step + step / 2).toFixed(1), y2: (MID + hh).toFixed(1),
+      stroke: "var(--signal)", "stroke-width": Math.max(1, step * 0.55).toFixed(2),
+      "stroke-linecap": "butt", opacity: 0.85
+    }));
+  }
+
+  // 레일 스크롤 스파이
+  var links = Array.prototype.slice.call(document.querySelectorAll("nav.rail a"));
+  var sections = links.map(function (a) {
+    return document.getElementById(a.getAttribute("href").slice(1));
+  });
+  function mark(id) {
+    links.forEach(function (a) {
+      a.setAttribute("aria-current", a.getAttribute("href") === "#" + id ? "true" : "false");
+    });
+  }
+  mark("s1");
+  if ("IntersectionObserver" in window) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting; });
+      for (var k = 0; k < sections.length; k++) {
+        if (sections[k] && seen[sections[k].id]) { mark(sections[k].id); return; }
+      }
+    }, { rootMargin: "-15% 0px -70% 0px" });
+    sections.forEach(function (s) { if (s) { io.observe(s); } });
+  }
+}());
+</script>
+</body>
+</html>
